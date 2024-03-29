@@ -1,8 +1,22 @@
 import moment from "moment";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-const Question = () => {
+const Question = (props) => {
   const [questionData, setQuestionData] = useState([]);
+  const [formData, setFormData] = useState({
+    question: "",
+    subject: "",
+    status: "",
+    expiry_date: ""
+  });
+  const ref = useRef(null);
+  const refClose = useRef(null);
+  const handleChange = (e) => {
+    setFormData({
+      ...formData,
+      [e.target.id]: e.target.value
+    });
+  }
   useEffect(() => {
     const fetchData = async () => {
       await getQuestion();
@@ -20,20 +34,56 @@ const Question = () => {
       });
 
       const data = await response.json();
+      console.log(data);
       setQuestionData(data.question);
     } catch (error) {
       console.log("There was an error!!!", error);
     }
   };
 
+  const handleAddQuestion = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/question', {
+        method: "POST",
+        headers: {
+          'Content-Type': "application/json"
+        },
+        body: JSON.stringify(formData)
+      });
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+
+      const data = await response.json();
+      if (data.status === 200) {
+        getQuestion();
+        props.showAlert("Question Added Succesfully", "success");
+        refClose.current.click();
+        clearData();
+      }
+    } catch (error) {
+
+    }
+  }
+  const clearData = () => {
+    setFormData({
+      question: "",
+      subject: "",
+      status: "",
+      expiry_date: ""
+    });
+  }
+
   return (
-    <div className="card p-3 shadow text-start">
+    <div className="card p-3 shadow text-start mb-5">
       <div>
         <h2 className="d-inline-flex">Questions</h2>
         <span
-          className="btn btn-primary float-end"
+          className="btn btn-primary btn-sm float-end"
           data-bs-toggle="modal"
           data-bs-target="#AddModal"
+          ref={ref}
         >
           Add
         </span>
@@ -45,7 +95,7 @@ const Question = () => {
           aria-labelledby="AddModalLabel"
           aria-hidden="true"
         >
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-xl">
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
@@ -58,45 +108,171 @@ const Question = () => {
                   aria-label="Close"
                 ></button>
               </div>
-              <form>
+              <form onSubmit={handleAddQuestion}>
                 <div className="modal-body">
-                  <div className="mb-2">
-                    <label htmlFor="question" className="form-label">
-                      Question
-                    </label>
-                    <input type="text" className="form-control" id="question" />
+                  <div className="row">
+                    <div className="col-sm-6">
+                      <div className="mb-2">
+                        <label htmlFor="question" className="form-label">
+                          Question
+                        </label>
+                        <input type="text" className="form-control" id="question" onChange={handleChange} placeholder="Write Question.." required/>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="mb-2">
+                        <label htmlFor="subject" className="form-label">
+                          Subject
+                        </label>
+                        <select className="form-control" id="subject" onChange={handleChange} required>
+                          <option value="">Select Subject</option>
+                          <option value="Physics">Physics</option>
+                          <option value="Chemistry">Chemistry</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="mb-3">
+                        <label htmlFor="question" className="form-label" >
+                          Status
+                        </label>
+                        <select className="form-control" id="status" onChange={handleChange} required>
+                          <option value="">Select Status</option>
+                          <option value="1">Active</option>
+                          <option value="0">Deactive</option>
+                        </select>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="mb-3">
+                        <label htmlFor="question" className="form-label" >
+                          Expiry Date
+                        </label>
+                        <input
+                          type="date"
+                          className="form-control"
+                          id="expiry_date"
+                          onChange={handleChange}
+                          required
+                        />
+                      </div>
+
+                    </div>
+                    <h5>Answer</h5>
+                    <div className="col-sm-6">
+                      <div className="mb-2">
+                        <label htmlFor="option1" className="form-label">
+                          Option 1
+                        </label>
+                        <input type="text" className="form-control" id="option1" onChange={handleChange} placeholder="Write Option.." required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="mb-2">
+                        <label htmlFor="option2" className="form-label">
+                          Option 2
+                        </label>
+                        <input type="text" className="form-control" id="option2" onChange={handleChange} placeholder="Write Option.." required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="mb-2">
+                        <label htmlFor="option3" className="form-label">
+                          Option 3
+                        </label>
+                        <input type="text" className="form-control" id="option3" onChange={handleChange} placeholder="Write Option.." required />
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div className="mb-2">
+                        <label htmlFor="option4" className="form-label">
+                          Option 4
+                        </label>
+                        <input type="text" className="form-control" id="option4" onChange={handleChange} placeholder="Write Option.."  required/>
+                      </div>
+                    </div>
+                    <div className="col-sm-12">
+                      <div className="mb-2 text-center mt-3">
+                        <label className="mb-2" htmlFor="right_ans">Right Option</label><br />
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                          <label className="form-check-label" htmlFor="inlineRadio1">1</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                          <label className="form-check-label" htmlFor="inlineRadio1">2</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                          <label className="form-check-label" htmlFor="inlineRadio1">3</label>
+                        </div>
+                        <div className="form-check form-check-inline">
+                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
+                          <label className="form-check-label" htmlFor="inlineRadio1">4</label>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                  <div className="mb-2">
-                    <label htmlFor="subject" className="form-label">
-                      Subject
-                    </label>
-                    <select className="form-control" id="subject">
-                      <option value="Physics">Physics</option>
-                      <option value="Chemistry">Chemistry</option>
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="question" className="form-label">
-                      Status
-                    </label>
-                    <select className="form-control" id="status">
-                      <option value="">Active</option>
-                      <option value="">Deactive</option>
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="question" className="form-label">
-                      Expiry Date
-                    </label>
-                    <input
-                      type="date"
-                      className="form-control"
-                      id="expiry_date"
-                    />
-                  </div>
+
+
+
+
+
+
+
+
+
+
+
+
                 </div>
                 <div className="modal-footer">
                   <button
+                    ref={refClose}
+                    type="button"
+                    className="btn btn-secondary"
+                    data-bs-dismiss="modal"
+                  >
+                    Close
+                  </button>
+                  <button type="submit" className="btn btn-primary">
+                    Add
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        {/* Answer Modal */}
+        <div
+          className="modal fade"
+          id="AddAnsModal"
+          tabIndex="-1"
+          aria-labelledby="AddAnsModalLabel"
+          aria-hidden="true"
+        >
+          <div className="modal-dialog">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h1 className="modal-title fs-5" id="exampleModalLabel">
+                  Add Answer
+                </h1>
+                <button
+                  type="button"
+                  className="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <form onSubmit={handleAddQuestion}>
+                <div className="modal-body">
+
+
+                </div>
+                <div className="modal-footer">
+                  <button
+                    ref={refClose}
                     type="button"
                     className="btn btn-secondary"
                     data-bs-dismiss="modal"
@@ -113,15 +289,16 @@ const Question = () => {
         </div>
       </div>
 
-      <table className="table table-bordered table-hover text-nowrap mt-4">
+      <table className="table table-bordered table-hover mt-4">
         <thead>
           <tr>
             <th scope="col">S.No</th>
-            <th scope="col">Questions</th>
+            <th scope="col" style={{ width: "400px" }}>Questions</th>
             <th scope="col">Subject</th>
             <th scope="col">Answer</th>
             <th scope="col">Status</th>
             <th scope="col">Remaining Days</th>
+            <th scope="col">Action</th>
           </tr>
         </thead>
         <tbody>
@@ -132,20 +309,28 @@ const Question = () => {
                   <td>{question.id}</td>
                   <td>{question.question}</td>
                   <td>
-                    <span className="badge bg-danger">{question.subject}</span>
+                    <span className={`badge ${question.subject === "Physics" ? "bg-danger" : "bg-primary"} `}>{question.subject}</span>
                   </td>
-                  <td>350</td>
+                  <td>
+                    <span className="badge bg-success" style={{ cursor: "pointer" }} data-bs-toggle="modal"
+                      data-bs-target="#AddAnsModal">
+                      Answer
+                    </span>
+                  </td>
                   <td>
                     <span
-                      className={`badge ${
-                        question.status == 1 ? "bg-success" : "bg-danger"
-                      }`}
+                      className={`badge ${question.status == 1 ? "bg-success" : "bg-danger"
+                        }`}
                     >
                       {question.status == 1 ? "Active" : "Deactive"}
                     </span>
                   </td>
                   <td>
-                    {moment(question.expiry_date).diff(moment(), "days")} Days
+                    {moment(question.expiry_date).diff(moment(), "days") + 1} Days
+                  </td>
+                  <td>
+                    <span className="btn btn-sm btn-primary mx-1">Edit</span>
+                    <span className="btn btn-sm btn-danger mx-1">Delete</span>
                   </td>
                 </tr>
               );
