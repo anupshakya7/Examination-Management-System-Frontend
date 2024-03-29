@@ -16,6 +16,8 @@ const Question = (props) => {
   });
   const ref = useRef(null);
   const refClose = useRef(null);
+  const refAns = useRef(null);
+  const refAnsClose = useRef(null);
   const handleChange = (e) => {
     setFormData({
       ...formData,
@@ -83,6 +85,23 @@ const Question = (props) => {
     });
   };
 
+  const answerModal = (currentAnswer) => {
+    refAns.current.click();
+    setFormData({
+      question: currentAnswer.question,
+      option1:
+        currentAnswer.answer[0] != null ? currentAnswer.answer[0].option1 : "",
+      option2:
+        currentAnswer.answer[0] != null ? currentAnswer.answer[0].option2 : "",
+      option3:
+        currentAnswer.answer[0] != null ? currentAnswer.answer[0].option3 : "",
+      option4:
+        currentAnswer.answer[0] != null ? currentAnswer.answer[0].option4 : "",
+      correct:
+        currentAnswer.answer[0] != null ? currentAnswer.answer[0].correct : "",
+    });
+  };
+
   return (
     <div className="card p-3 shadow text-start mb-5">
       <div>
@@ -96,6 +115,7 @@ const Question = (props) => {
           Add
         </span>
 
+        {/* Add Modal */}
         <div
           className="modal fade"
           id="AddModal"
@@ -357,7 +377,63 @@ const Question = (props) => {
                 ></button>
               </div>
               <form onSubmit={handleAddQuestion}>
-                <div className="modal-body"></div>
+                <div className="modal-body">
+                  <div className="row">
+                    <p>{formData.question}</p>
+                    <div className="col-sm-6">
+                      <div
+                        className={`card p-2 my-1 ${
+                          formData.option1 === formData.correct
+                            ? "bg-success text-white"
+                            : ""
+                        } `}
+                      >
+                        <p>
+                          1. <span>{formData.option1}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div
+                        className={`card p-2 my-1 ${
+                          formData.option2 === formData.correct
+                            ? "bg-success text-white"
+                            : ""
+                        } `}
+                      >
+                        <p>
+                          2. <span>{formData.option2}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div
+                        className={`card p-2 my-1 ${
+                          formData.option3 === formData.correct
+                            ? "bg-success text-white"
+                            : ""
+                        } `}
+                      >
+                        <p>
+                          3. <span>{formData.option3}</span>
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-sm-6">
+                      <div
+                        className={`card p-2 my-1 ${
+                          formData.option4 === formData.correct
+                            ? "bg-success text-white"
+                            : ""
+                        } `}
+                      >
+                        <p>
+                          4. <span>{formData.option4}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </form>
             </div>
           </div>
@@ -398,12 +474,13 @@ const Question = (props) => {
                   </td>
                   <td>
                     <span
+                      ref={refAns}
                       className="badge bg-success"
                       style={{ cursor: "pointer" }}
                       data-bs-toggle="modal"
                       data-bs-target="#AddAnsModal"
                     >
-                      Answer
+                      <span onClick={() => answerModal(question)}>Answer</span>
                     </span>
                   </td>
                   <td>
