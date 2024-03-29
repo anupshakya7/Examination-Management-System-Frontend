@@ -4,10 +4,10 @@ import Student from "./Student";
 
 const Home = (props) => {
   const navigate = useNavigate();
-  const [question,setQuestion] = useState('');
-  const [physicsQuestion,setPhysicsQuestion] = useState('');
-  const [chemistryQuestion,setChemistryQuestion] = useState('');
-  const [student,setStudent] = useState('');
+  const [question, setQuestion] = useState("");
+  const [physicsQuestion, setPhysicsQuestion] = useState("");
+  const [chemistryQuestion, setChemistryQuestion] = useState("");
+  const [student, setStudent] = useState("");
   useEffect(() => {
     const userInfo = localStorage.getItem("user-info");
     if (!userInfo) {
@@ -18,12 +18,15 @@ const Home = (props) => {
 
   const getQuestions = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/question/quick-info/dashboardQuickInfo", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
+      const response = await fetch(
+        "http://127.0.0.1:8000/api/question/quick-info/dashboardQuickInfo",
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       const data = await response.json();
       setQuestion(data.question);
@@ -78,7 +81,9 @@ const Home = (props) => {
             <div className="card-body px-4 text-center">
               <div className="d-flex justify-content-between align-items-center mb-2">
                 <div className="me-2">
-                  <div className="display-5 text-white">{chemistryQuestion}</div>
+                  <div className="display-5 text-white">
+                    {chemistryQuestion}
+                  </div>
                   <div className="card-text">
                     Total Numbers of Chemistry Questions
                   </div>
@@ -103,7 +108,7 @@ const Home = (props) => {
           </div>
         </div>
       </div>
-      <Student showAlert={props.showAlert}/>
+      <Student dashboardQuickInfo={getQuestions} showAlert={props.showAlert} />
     </div>
   );
 };

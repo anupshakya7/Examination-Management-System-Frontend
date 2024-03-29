@@ -7,16 +7,21 @@ const Question = (props) => {
     question: "",
     subject: "",
     status: "",
-    expiry_date: ""
+    expiry_date: "",
+    option1: "",
+    option2: "",
+    option3: "",
+    option4: "",
+    correct: "",
   });
   const ref = useRef(null);
   const refClose = useRef(null);
   const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
-  }
+  };
   useEffect(() => {
     const fetchData = async () => {
       await getQuestion();
@@ -44,12 +49,12 @@ const Question = (props) => {
   const handleAddQuestion = async (e) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://127.0.0.1:8000/api/question', {
+      const response = await fetch("http://127.0.0.1:8000/api/question", {
         method: "POST",
         headers: {
-          'Content-Type': "application/json"
+          "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -62,18 +67,21 @@ const Question = (props) => {
         refClose.current.click();
         clearData();
       }
-    } catch (error) {
-
-    }
-  }
+    } catch (error) {}
+  };
   const clearData = () => {
     setFormData({
       question: "",
       subject: "",
       status: "",
-      expiry_date: ""
+      expiry_date: "",
+      option1: "",
+      option2: "",
+      option3: "",
+      option4: "",
+      correct: "",
     });
-  }
+  };
 
   return (
     <div className="card p-3 shadow text-start mb-5">
@@ -116,7 +124,14 @@ const Question = (props) => {
                         <label htmlFor="question" className="form-label">
                           Question
                         </label>
-                        <input type="text" className="form-control" id="question" onChange={handleChange} placeholder="Write Question.." required/>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="question"
+                          onChange={handleChange}
+                          placeholder="Write Question.."
+                          required
+                        />
                       </div>
                     </div>
                     <div className="col-sm-6">
@@ -124,7 +139,12 @@ const Question = (props) => {
                         <label htmlFor="subject" className="form-label">
                           Subject
                         </label>
-                        <select className="form-control" id="subject" onChange={handleChange} required>
+                        <select
+                          className="form-control"
+                          id="subject"
+                          onChange={handleChange}
+                          required
+                        >
                           <option value="">Select Subject</option>
                           <option value="Physics">Physics</option>
                           <option value="Chemistry">Chemistry</option>
@@ -133,10 +153,15 @@ const Question = (props) => {
                     </div>
                     <div className="col-sm-6">
                       <div className="mb-3">
-                        <label htmlFor="question" className="form-label" >
+                        <label htmlFor="question" className="form-label">
                           Status
                         </label>
-                        <select className="form-control" id="status" onChange={handleChange} required>
+                        <select
+                          className="form-control"
+                          id="status"
+                          onChange={handleChange}
+                          required
+                        >
                           <option value="">Select Status</option>
                           <option value="1">Active</option>
                           <option value="0">Deactive</option>
@@ -145,7 +170,7 @@ const Question = (props) => {
                     </div>
                     <div className="col-sm-6">
                       <div className="mb-3">
-                        <label htmlFor="question" className="form-label" >
+                        <label htmlFor="question" className="form-label">
                           Expiry Date
                         </label>
                         <input
@@ -156,7 +181,6 @@ const Question = (props) => {
                           required
                         />
                       </div>
-
                     </div>
                     <h5>Answer</h5>
                     <div className="col-sm-6">
@@ -164,7 +188,14 @@ const Question = (props) => {
                         <label htmlFor="option1" className="form-label">
                           Option 1
                         </label>
-                        <input type="text" className="form-control" id="option1" onChange={handleChange} placeholder="Write Option.." required />
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="option1"
+                          onChange={handleChange}
+                          placeholder="Write Option.."
+                          required
+                        />
                       </div>
                     </div>
                     <div className="col-sm-6">
@@ -172,7 +203,14 @@ const Question = (props) => {
                         <label htmlFor="option2" className="form-label">
                           Option 2
                         </label>
-                        <input type="text" className="form-control" id="option2" onChange={handleChange} placeholder="Write Option.." required />
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="option2"
+                          onChange={handleChange}
+                          placeholder="Write Option.."
+                          required
+                        />
                       </div>
                     </div>
                     <div className="col-sm-6">
@@ -180,7 +218,14 @@ const Question = (props) => {
                         <label htmlFor="option3" className="form-label">
                           Option 3
                         </label>
-                        <input type="text" className="form-control" id="option3" onChange={handleChange} placeholder="Write Option.." required />
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="option3"
+                          onChange={handleChange}
+                          placeholder="Write Option.."
+                          required
+                        />
                       </div>
                     </div>
                     <div className="col-sm-6">
@@ -188,43 +233,89 @@ const Question = (props) => {
                         <label htmlFor="option4" className="form-label">
                           Option 4
                         </label>
-                        <input type="text" className="form-control" id="option4" onChange={handleChange} placeholder="Write Option.."  required/>
+                        <input
+                          type="text"
+                          className="form-control"
+                          id="option4"
+                          onChange={handleChange}
+                          placeholder="Write Option.."
+                          required
+                        />
                       </div>
                     </div>
                     <div className="col-sm-12">
                       <div className="mb-2 text-center mt-3">
-                        <label className="mb-2" htmlFor="right_ans">Right Option</label><br />
+                        <label className="mb-2" htmlFor="right_ans">
+                          Right Option
+                        </label>
+                        <br />
                         <div className="form-check form-check-inline">
-                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                          <label className="form-check-label" htmlFor="inlineRadio1">1</label>
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="inlineRadioOptions"
+                            id="correct"
+                            value={formData.option1}
+                            onChange={handleChange}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="inlineRadio1"
+                          >
+                            1
+                          </label>
                         </div>
                         <div className="form-check form-check-inline">
-                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                          <label className="form-check-label" htmlFor="inlineRadio1">2</label>
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="inlineRadioOptions"
+                            id="correct"
+                            value={formData.option2}
+                            onChange={handleChange}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="inlineRadio1"
+                          >
+                            2
+                          </label>
                         </div>
                         <div className="form-check form-check-inline">
-                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                          <label className="form-check-label" htmlFor="inlineRadio1">3</label>
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="inlineRadioOptions"
+                            id="correct"
+                            value={formData.option3}
+                            onChange={handleChange}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="inlineRadio1"
+                          >
+                            3
+                          </label>
                         </div>
                         <div className="form-check form-check-inline">
-                          <input className="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1" />
-                          <label className="form-check-label" htmlFor="inlineRadio1">4</label>
+                          <input
+                            className="form-check-input"
+                            type="radio"
+                            name="inlineRadioOptions"
+                            id="correct"
+                            value={formData.option4}
+                            onChange={handleChange}
+                          />
+                          <label
+                            className="form-check-label"
+                            htmlFor="inlineRadio1"
+                          >
+                            4
+                          </label>
                         </div>
                       </div>
                     </div>
                   </div>
-
-
-
-
-
-
-
-
-
-
-
-
                 </div>
                 <div className="modal-footer">
                   <button
@@ -252,7 +343,7 @@ const Question = (props) => {
           aria-labelledby="AddAnsModalLabel"
           aria-hidden="true"
         >
-          <div className="modal-dialog">
+          <div className="modal-dialog modal-lg">
             <div className="modal-content">
               <div className="modal-header">
                 <h1 className="modal-title fs-5" id="exampleModalLabel">
@@ -266,23 +357,7 @@ const Question = (props) => {
                 ></button>
               </div>
               <form onSubmit={handleAddQuestion}>
-                <div className="modal-body">
-
-
-                </div>
-                <div className="modal-footer">
-                  <button
-                    ref={refClose}
-                    type="button"
-                    className="btn btn-secondary"
-                    data-bs-dismiss="modal"
-                  >
-                    Close
-                  </button>
-                  <button type="submit" className="btn btn-primary">
-                    Add
-                  </button>
-                </div>
+                <div className="modal-body"></div>
               </form>
             </div>
           </div>
@@ -293,7 +368,9 @@ const Question = (props) => {
         <thead>
           <tr>
             <th scope="col">S.No</th>
-            <th scope="col" style={{ width: "400px" }}>Questions</th>
+            <th scope="col" style={{ width: "400px" }}>
+              Questions
+            </th>
             <th scope="col">Subject</th>
             <th scope="col">Answer</th>
             <th scope="col">Status</th>
@@ -309,24 +386,38 @@ const Question = (props) => {
                   <td>{question.id}</td>
                   <td>{question.question}</td>
                   <td>
-                    <span className={`badge ${question.subject === "Physics" ? "bg-danger" : "bg-primary"} `}>{question.subject}</span>
+                    <span
+                      className={`badge ${
+                        question.subject === "Physics"
+                          ? "bg-danger"
+                          : "bg-primary"
+                      } `}
+                    >
+                      {question.subject}
+                    </span>
                   </td>
                   <td>
-                    <span className="badge bg-success" style={{ cursor: "pointer" }} data-bs-toggle="modal"
-                      data-bs-target="#AddAnsModal">
+                    <span
+                      className="badge bg-success"
+                      style={{ cursor: "pointer" }}
+                      data-bs-toggle="modal"
+                      data-bs-target="#AddAnsModal"
+                    >
                       Answer
                     </span>
                   </td>
                   <td>
                     <span
-                      className={`badge ${question.status == 1 ? "bg-success" : "bg-danger"
-                        }`}
+                      className={`badge ${
+                        question.status == 1 ? "bg-success" : "bg-danger"
+                      }`}
                     >
                       {question.status == 1 ? "Active" : "Deactive"}
                     </span>
                   </td>
                   <td>
-                    {moment(question.expiry_date).diff(moment(), "days") + 1} Days
+                    {moment(question.expiry_date).diff(moment(), "days") + 1}{" "}
+                    Days
                   </td>
                   <td>
                     <span className="btn btn-sm btn-primary mx-1">Edit</span>

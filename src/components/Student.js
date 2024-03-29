@@ -3,18 +3,18 @@ import React, { useEffect, useRef, useState } from "react";
 
 const Student = (props) => {
   const [studentData, setStudentData] = useState([]);
-  const [formData,setFormData] = useState({
-    name:"",
-    email:"",
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
   });
   const ref = useRef(null);
   const refClose = useRef(null);
-  const handleChange = (e)=>{
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.id]: e.target.value
+      [e.target.id]: e.target.value,
     });
-  }
+  };
   useEffect(() => {
     const fetchData = async () => {
       await getStudent();
@@ -34,42 +34,41 @@ const Student = (props) => {
       const data = await response.json();
       console.log(data);
       setStudentData(data.student);
+      props.dashboardQuickInfo();
     } catch (error) {
       console.log("There was an error!!!", error);
     }
   };
 
-  const handleAddStudent = async(e)=>{
+  const handleAddStudent = async (e) => {
     e.preventDefault();
-    try{
-      const response = await fetch('http://127.0.0.1:8000/api/student',{
-        method:"POST",
-        headers:{
-          'Content-Type':"application/json"
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/student", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-        body:JSON.stringify(formData)
+        body: JSON.stringify(formData),
       });
-      if(!response.ok){
+      if (!response.ok) {
         throw new Error("Network response was not ok");
       }
 
       const data = await response.json();
-      if(data.status === 200){
+      if (data.status === 200) {
         getStudent();
-        props.showAlert("Student Added Succesfully","success");
+        props.showAlert("Student Added Succesfully", "success");
         refClose.current.click();
         clearData();
       }
-    }catch(error){
-
-    }
-  }
-  const clearData = () =>{
+    } catch (error) {}
+  };
+  const clearData = () => {
     setFormData({
-      name:"",
-      email:""
+      name: "",
+      email: "",
     });
-  }
+  };
 
   return (
     <div className="card p-3 shadow text-start mb-5">
@@ -110,13 +109,25 @@ const Student = (props) => {
                     <label htmlFor="name" className="form-label">
                       Name
                     </label>
-                    <input type="text" className="form-control" id="name" onChange={handleChange} placeholder="Enter Name" />
+                    <input
+                      type="text"
+                      className="form-control"
+                      id="name"
+                      onChange={handleChange}
+                      placeholder="Enter Name"
+                    />
                   </div>
                   <div className="mb-2">
                     <label htmlFor="email" className="form-label">
                       Email
                     </label>
-                    <input type="email" className="form-control" id="email" onChange={handleChange} placeholder="Enter Email" />
+                    <input
+                      type="email"
+                      className="form-control"
+                      id="email"
+                      onChange={handleChange}
+                      placeholder="Enter Email"
+                    />
                   </div>
                 </div>
                 <div className="modal-footer">
