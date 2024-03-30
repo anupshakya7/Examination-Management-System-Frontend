@@ -74,13 +74,17 @@ const Student = (props) => {
     <div className="card p-3 shadow text-start mb-5">
       <div>
         <h2 className="d-inline-flex">Students</h2>
+
         <span
-          className="btn btn-primary btn-sm float-end"
+          className="btn btn-primary btn-sm float-end mx-1 shadow"
           data-bs-toggle="modal"
           data-bs-target="#AddModal"
           ref={ref}
         >
           Add
+        </span>
+        <span className="btn btn-primary btn-sm float-end mx-1 shadow">
+          Send Exam Link Seleted Student
         </span>
 
         <div
@@ -149,12 +153,14 @@ const Student = (props) => {
         </div>
       </div>
 
-      <table className="table table-bordered table-hover mt-4">
+      <table className="table table-bordered table-hover mt-4 text-center">
         <thead>
           <tr>
+            <th scope="col">Select for Link</th>
             <th scope="col">S.No</th>
             <th scope="col">Name</th>
             <th scope="col">Email</th>
+            <th scope="col">Send Exam Link</th>
             <th scope="col">Action</th>
           </tr>
         </thead>
@@ -163,12 +169,29 @@ const Student = (props) => {
             studentData.map((student) => {
               return (
                 <tr key={student.id}>
+                  <td>
+                    <input
+                      className="form-check-input"
+                      type="checkbox"
+                      role="switch"
+                      id="flexSwitchCheckDefault"
+                    />
+                  </td>
                   <td>{student.id}</td>
                   <td>{student.name}</td>
                   <td>{student.email}</td>
                   <td>
-                    <span className="btn btn-sm btn-primary mx-1">Edit</span>
-                    <span className="btn btn-sm btn-danger mx-1">Delete</span>
+                    <span className="btn btn-sm btn-primary mx-1 shadow">
+                      Send
+                    </span>
+                  </td>
+                  <td>
+                    <span className="btn btn-sm btn-primary mx-1 shadow">
+                      Edit
+                    </span>
+                    <span className="btn btn-sm btn-danger mx-1 shadow">
+                      Delete
+                    </span>
                   </td>
                 </tr>
               );
